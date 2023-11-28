@@ -10,11 +10,25 @@ import { notesCollection, db } from './firebase'
 export default function App() {
     const [notes, setNotes] = React.useState([])
     const [currentNoteId, setCurrentNoteId] = React.useState('')
+    const [tempNoteText, setTempNoteText] = React.useState('')
 
     const currentNote =
         notes.find(note => note.id === currentNoteId) || notes[0]
 
-    console.log(notes)
+    React.useEffect(() => {
+        if (currentNote) {
+            setTempNoteText(currentNote.body)
+        }
+    }, [currentNote])
+
+    React.useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            if (tempNoteText !== currentNote.body) {
+                updateNote(tempNoteText)
+            }
+        }, 500)
+        return () => clearTimeout(timeoutId)
+    }, [tempNoteText])
 
     React.useEffect(() => {
         const unsubscribe = onSnapshot(notesCollection, function (snapshot) {
@@ -74,7 +88,10 @@ export default function App() {
                         newNote={createNewNote}
                         deleteNote={deleteNote}
                     />
-                    <Editor currentNote={currentNote} updateNote={updateNote} />
+                    <Editor
+                        tempNoteText={tempNoteText}
+                        setTempNoteText={setTempNoteText}
+                    />
                 </Split>
             ) : (
                 <div className="no-notes">
