@@ -49,6 +49,8 @@ This approach offers a structured pathway to analyze and comprehend React compon
 ### Sync Notes with localStorage
 
 ![Using localStorage](/public/localStorage.png)
+
+- Resource:
 [Understanding `localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
 
 `localStorage` is a way to store information on the user's computer. Unlike data stored in variables that disappear when you close your app, `localStorage` keeps the data even after closing the browser. This is how we use it:
