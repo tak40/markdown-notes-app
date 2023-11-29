@@ -10,9 +10,10 @@ This project is a Markdown Notes App built with React, as part of Scrimba's Reac
 1. [Understanding the Rendering Process and File Connections](#understanding-the-rendering-process-and-file-connections)
 2. [Guidelines for Understanding React Codebase](#guidelines-for-understanding-react-codebase)
 3. [Sync Notes with localStorage](#sync-notes-with-localstorage)
-4. [Add Note Summary Titles](#add-note-summary-titles)
-5. [Move Modified Notes to the Top of the List](#move-modified-notes-to-the-top-of-the-list)
-6. [Delete Notes](#delete-notes)
+4. [Lazy State Initialization](#lazy-state-initialization)
+5. [Add Note Summary Titles](#add-note-summary-titles)
+6. [Move Modified Notes to the Top of the List](#move-modified-notes-to-the-top-of-the-list)
+7. [Delete Notes](#delete-notes)
 
 ### Understanding the Rendering Process and File Connections
 
@@ -100,6 +101,26 @@ When implementing `localStorage` in a React app, we use the `useEffect` hook to 
     ```
 
 This setup ensures our notes are saved across browser sessions and are retrieved when the app loads.
+
+#### Lazy Initialization of State
+
+In React, `useState` allows for lazy initialization, where the initial state is only set on the initial render of the component. This prevents expensive operations from being run on every render. 
+
+For instance, when we retrieve notes from `localStorage`, we only want to do this once when the component mounts:
+
+```javascript
+const [notes, setNotes] = React.useState(
+    () => JSON.parse(localStorage.getItem("notes")) || []
+);
+```
+
+In this code:
+
+- `JSON.parse(localStorage.getItem("notes"))` is the potentially expensive operation (e.g., accessing `localStorage` and parsing JSON).
+- Wrapping this operation in a function `() => ...` ensures it's only called when the component mounts.
+- If `localStorage` returns `null`, indicating no saved notes, we default to an empty array [].
+
+This pattern is especially useful when the initial state depends on computations such as parsing JSON from `localStorage` or fetching data from an API. It improves performance by avoiding unnecessary work on re-renders.
 
 ### Add Note Summary Titles
 (Description of how summary titles are added to the notes.)
