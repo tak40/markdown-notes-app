@@ -21,6 +21,8 @@ export default function App() {
         }
     }, [currentNote])
 
+    console.log(notes)
+
     React.useEffect(() => {
         const timeoutId = setTimeout(() => {
             if (tempNoteText !== currentNote.body) {
