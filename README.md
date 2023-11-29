@@ -161,7 +161,48 @@ The update takes place in the `Sidebar` component, specifically within the mappi
 
 ### Move Modified Notes to the Top of the List
 
-(Explanation of the logic used to move modified notes to the top of the list.)
+One of the intuitive features of our Markdown Notes App is that when a user edits a note, the note is automatically moved to the top of the list. This section explains the rationale and the implementation details of this feature.
+
+#### Understanding the User Edit Trigger
+
+The first step in implementing this feature is to identify where in the code a note is being edited. This action typically occurs in a function that handles the update of a note's content. In our application, this is managed by the `updateNote` function. This function is crucial as it determines not only the update of the note's content but also the opportunity to change the note's position in the list.
+
+#### Changing the Order of Notes
+
+After identifying the edited note, the next step is to change the order of the notes. The goal is to move the edited note to the top of the list while maintaining the order of the other notes. To achieve this, we need to:
+
+1. Identify the edited note.
+2. Create a new array where the edited note is placed at the beginning.
+3. Add the remaining notes to this array, excluding the recently edited note.
+
+#### Implementation
+
+Here's how we implemented this feature:
+
+- **In the `updateNote` Function**:
+  - We iterate over the array of notes.
+  - When we find the note being edited (identified by `oldNote.id === currentNoteId`), we update its content and use the `unshift` method to add this note to the beginning of a new array.
+  - For all other notes, we use the `push` method to add them to this new array, ensuring the order is preserved.
+
+    ```javascript
+    function updateNote(text) {
+        setNotes(oldNotes => {
+            const newArray = [];
+            for (let i = 0; i < oldNotes.length; i++) {
+                const oldNote = oldNotes[i];
+                if (oldNote.id === currentNoteId) {
+                    newArray.unshift({ ...oldNote, body: text });
+                } else {
+                    newArray.push(oldNote);
+                }
+            }
+            return newArray;
+        });
+    }
+    ```
+
+This functionality enhances the user experience by ensuring that the most recently interacted-with note is easily accessible and prominent in the list.
+
 
 ### Delete Notes
 
