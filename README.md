@@ -206,7 +206,47 @@ This functionality enhances the user experience by ensuring that the most recent
 
 ### Delete Notes
 
-(Description of the functionality that allows users to delete notes.)
+An essential feature in our Markdown Notes App is the ability for users to delete individual notes. This functionality involves understanding the flow of data and functions between parent and child components, as well as event handling and array manipulation in React.
+
+#### Parent-Child Relationship and Prop Passing
+
+The `deleteNote` function is defined in the `App` component, which is the parent component managing the state of the notes. This function is passed down to the `Sidebar` component (the child) as a prop. This allows `Sidebar` to use the `deleteNote` function while the actual state manipulation and logic reside in `App`.
+
+#### Function Execution on Click
+
+In the `Sidebar`, each note has a delete button. The deletion of a note is triggered by a click event on this button. We attach an event handler to the button using the `onClick` attribute. To pass the specific `note.id` to the `deleteNote` function and to handle the click event, we use an arrow function:
+
+```javascript
+<button 
+    className="delete-btn"
+    onClick={(event) => props.deleteNote(event, note.id)}
+>
+    <i className="gg-trash trash-icon"></i>
+</button>
+```
+
+### Handling the Click Event and `event.stopPropagation()`
+
+The `deleteNote` function takes two parameters: the event and the note's ID. The inclusion of the event object allows us to call `event.stopPropagation()`, which prevents the click event from bubbling up to parent elements. This is crucial in complex UIs to ensure that only the intended actions occur.
+
+### Deleting the Note Using Array `filter` Method
+
+The actual deletion of the note is handled by the `filter` method, which is used to create a new array excluding the note to be deleted. This method is effective and aligns with React's principle of immutability:
+
+```javascript
+function deleteNote(event, noteId) {
+    event.stopPropagation();
+    setNotes(notes.filter(note => note.id !== noteId));
+}
+```
+
+In this function:
+
+- We use `notes.filter(note => note.id !== noteId)` to create a new array that includes all notes except the one with the specified `noteId`.
+- `setNotes` is then used to update the state with this new array, effectively removing the note from the list.
+
+This setup provides a seamless note deletion experience, enhancing the usability of our Markdown Notes App while maintaining the clean and efficient management of state in React.
+
 
 # Scrimba React Starter Template
 
